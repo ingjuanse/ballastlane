@@ -153,8 +153,8 @@ public sealed class TasksController(
 
     private Guid GetUserId()
     {
-        var claim = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            ?? User.FindFirstValue("sub");
+        var claim = User.FindFirstValue("sub")
+            ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!Guid.TryParse(claim, out var userId) || userId == Guid.Empty)
         {
             throw new UnauthorizedAccessException("A valid user identity is required.");

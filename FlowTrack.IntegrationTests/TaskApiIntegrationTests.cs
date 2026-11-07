@@ -37,7 +37,12 @@ public sealed class TaskApiIntegrationTests
         });
         Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
         using var loginJson = JsonDocument.Parse(await loginResponse.Content.ReadAsStringAsync());
+        var userId = loginJson.RootElement.GetProperty("userId").GetGuid();
         var token = loginJson.RootElement.GetProperty("accessToken").GetString();
+        var tokenPayload = token!.Split('.')[1].Replace('-', '+').Replace('_', '/');
+        tokenPayload = tokenPayload.PadRight((tokenPayload.Length + 3) / 4 * 4, '=');
+        using var tokenJson = JsonDocument.Parse(Convert.FromBase64String(tokenPayload));
+        Assert.Equal(userId, Guid.Parse(tokenJson.RootElement.GetProperty("sub").GetString()!));
 
         using var tasksRequest = new HttpRequestMessage(HttpMethod.Get, "/api/tasks");
         tasksRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);

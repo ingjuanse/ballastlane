@@ -5,12 +5,22 @@ namespace FlowTrack.Domain.Entities;
 public sealed class User
 {
     private User(Guid id, string userName, string email, string passwordHash)
+        : this(id, userName, email, passwordHash, DateTimeOffset.UtcNow)
+    {
+    }
+
+    internal User(
+        Guid id,
+        string userName,
+        string email,
+        string passwordHash,
+        DateTimeOffset createdUtc)
     {
         Id = id;
         UserName = userName;
         Email = email;
         PasswordHash = passwordHash;
-        CreatedUtc = DateTimeOffset.UtcNow;
+        CreatedUtc = createdUtc;
     }
 
     public Guid Id { get; }

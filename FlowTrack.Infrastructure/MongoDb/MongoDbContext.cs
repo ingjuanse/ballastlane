@@ -14,6 +14,12 @@ public sealed class MongoDbContext
         BsonClassMap.RegisterClassMap<User>(classMap =>
         {
             classMap.AutoMap();
+            classMap.MapCreator(user => new User(
+                user.Id,
+                user.UserName,
+                user.Email,
+                user.PasswordHash,
+                user.CreatedUtc));
             classMap.MapIdMember(user => user.Id)
                 .SetSerializer(new GuidSerializer(GuidRepresentation.Standard));
             classMap.MapMember(user => user.CreatedUtc);
@@ -21,6 +27,14 @@ public sealed class MongoDbContext
         BsonClassMap.RegisterClassMap<TaskItem>(classMap =>
         {
             classMap.AutoMap();
+            classMap.MapCreator(task => new TaskItem(
+                task.Id,
+                task.Title,
+                task.Description,
+                task.Status,
+                task.DueDate,
+                task.UserId,
+                task.CreatedUtc));
             classMap.MapIdMember(task => task.Id)
                 .SetSerializer(new GuidSerializer(GuidRepresentation.Standard));
             classMap.MapMember(task => task.UserId)

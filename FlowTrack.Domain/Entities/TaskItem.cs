@@ -14,6 +14,18 @@ public sealed class TaskItem
         TaskStatus status,
         DateTimeOffset? dueDate,
         Guid userId)
+        : this(id, title, description, status, dueDate, userId, DateTimeOffset.UtcNow)
+    {
+    }
+
+    internal TaskItem(
+        Guid id,
+        string title,
+        string description,
+        TaskStatus status,
+        DateTimeOffset? dueDate,
+        Guid userId,
+        DateTimeOffset createdUtc)
     {
         Id = id;
         Title = title;
@@ -21,7 +33,7 @@ public sealed class TaskItem
         Status = status;
         DueDate = dueDate;
         UserId = userId;
-        CreatedUtc = DateTimeOffset.UtcNow;
+        CreatedUtc = createdUtc;
     }
 
     public Guid Id { get; }

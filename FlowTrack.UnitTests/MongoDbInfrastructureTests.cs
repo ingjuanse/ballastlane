@@ -64,6 +64,21 @@ public sealed class MongoDbInfrastructureTests
     }
 
     [Fact]
+    public void User_bson_round_trip_preserves_id_and_created_timestamp()
+    {
+        _ = CreateContext();
+        var user = User.Create("test-user", "test@example.com", "password-hash");
+
+        var restored = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<User>(user.ToBsonDocument());
+
+        Assert.Equal(user.Id, restored.Id);
+        Assert.Equal(user.UserName, restored.UserName);
+        Assert.Equal(user.Email, restored.Email);
+        Assert.Equal(user.PasswordHash, restored.PasswordHash);
+        Assert.Equal(user.CreatedUtc.ToUnixTimeMilliseconds(), restored.CreatedUtc.ToUnixTimeMilliseconds());
+    }
+
+    [Fact]
     public void Task_guid_fields_are_serialized_with_standard_representation()
     {
         _ = CreateContext();
@@ -74,6 +89,21 @@ public sealed class MongoDbInfrastructureTests
         Assert.Equal(BsonBinarySubType.UuidStandard, document["_id"].AsBsonBinaryData.SubType);
         Assert.Equal(BsonBinarySubType.UuidStandard, document["UserId"].AsBsonBinaryData.SubType);
         Assert.True(document.Contains("CreatedUtc"));
+    }
+
+    [Fact]
+    public void Task_bson_round_trip_preserves_ids_and_created_timestamp()
+    {
+        _ = CreateContext();
+        var task = TaskItem.Create("Test task", "A description", null, Guid.NewGuid());
+
+        var restored = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<TaskItem>(task.ToBsonDocument());
+
+        Assert.Equal(task.Id, restored.Id);
+        Assert.Equal(task.UserId, restored.UserId);
+        Assert.Equal(task.Title, restored.Title);
+        Assert.Equal(task.Description, restored.Description);
+        Assert.Equal(task.CreatedUtc.ToUnixTimeMilliseconds(), restored.CreatedUtc.ToUnixTimeMilliseconds());
     }
 
     [Fact]
