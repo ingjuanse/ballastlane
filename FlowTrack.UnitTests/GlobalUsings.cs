@@ -1,0 +1,10 @@
+global using FluentAssertions;
+global using FlowTrack.Application.Abstractions;
+global using FlowTrack.Application.Common;
+global using FlowTrack.Application.Tasks;
+global using FlowTrack.Domain.Entities;
+global using FlowTrack.Infrastructure.MongoDb;
+global using FlowTrack.Infrastructure.MongoDb.Repositories;
+global using Moq;
+global using MongoDB.Driver;
+global using Xunit;

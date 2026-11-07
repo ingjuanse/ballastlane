@@ -1,0 +1,6 @@
+@FlowTrack.Api_HostAddress = http://localhost:5098
+
+GET {{FlowTrack.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

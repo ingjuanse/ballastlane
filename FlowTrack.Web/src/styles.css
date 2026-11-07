@@ -1,0 +1,14 @@
+:root {
+  --ft-primary: #2563eb;
+  --ft-sidebar: #0f172a;
+  --ft-surface: #f8fafc;
+}
+
+body {
+  margin: 0;
+  background: var(--ft-surface);
+  color: #172033;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.btn-primary { background-color: var(--ft-primary); border-color: var(--ft-primary); }

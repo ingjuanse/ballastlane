@@ -1,0 +1,63 @@
+services:
+  mongodb:
+    image: mongo:8.0
+    container_name: flowtrack-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE:-flowtrack}
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - flowtrack-mongo-data:/data/db
+    networks:
+      - flowtrack-network
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.adminCommand({ ping: 1 }).ok' localhost:27017/test"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  api:
+    build:
+      context: .
+      dockerfile: FlowTrack.Api/Dockerfile
+    container_name: flowtrack-api
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      ASPNETCORE_HTTP_PORTS: 8080
+      MongoDb__ConnectionString: mongodb://mongodb:27017
+      MongoDb__DatabaseName: ${MONGO_DATABASE:-flowtrack}
+      MongoDb__UsersCollectionName: ${MONGO_USERS_COLLECTION:-users}
+      MongoDb__TasksCollectionName: ${MONGO_TASKS_COLLECTION:-tasks}
+      Jwt__Issuer: ${JWT_ISSUER:-FlowTrack.Api}
+      Jwt__Audience: ${JWT_AUDIENCE:-FlowTrack.Client}
+      Jwt__Secret: ${JWT_SECRET:?JWT_SECRET must be set}
+    ports:
+      - "${API_PORT:-8080}:8080"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - flowtrack-network
+
+  web:
+    build:
+      context: ./FlowTrack.Web
+      dockerfile: Dockerfile
+    container_name: flowtrack-web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-4200}:80"
+    depends_on:
+      - api
+    networks:
+      - flowtrack-network
+
+volumes:
+  flowtrack-mongo-data:
+
+networks:
+  flowtrack-network:
+    driver: bridge

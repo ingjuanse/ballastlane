@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="FlowTrack.Api/FlowTrack.Api.csproj" />
+  <Project Path="FlowTrack.Application/FlowTrack.Application.csproj" />
+  <Project Path="FlowTrack.Domain/FlowTrack.Domain.csproj" />
+  <Project Path="FlowTrack.Infrastructure/FlowTrack.Infrastructure.csproj" />
+  <Project Path="FlowTrack.IntegrationTests/FlowTrack.IntegrationTests.csproj" />
+  <Project Path="FlowTrack.UnitTests/FlowTrack.UnitTests.csproj" />
+</Solution>
