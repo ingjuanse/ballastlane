@@ -140,7 +140,7 @@ export class TaskFormComponent implements OnInit {
     const request = {
       title: value.title.trim(),
       description: value.description.trim(),
-      dueDate: new Date(`${value.dueDate}T23:59:59Z`).toISOString()
+      dueDate: new Date(`${value.dueDate}T23:59:59`).toISOString()
     };
 
     const operation = this.isEditMode && this.taskId
